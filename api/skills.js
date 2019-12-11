@@ -1,8 +1,8 @@
 module.exports = (req,res) => {
-    var primary_skills = { primary_skills:
+    res.send({ "primary_skills":
 	[{
-      primary_term: "C#",
-      associated_terms: [{
+      "primary_term": "C#",
+      "associated_terms": [{
           "number_of_times": 25,
           "ratio": "0.250",
           "secondary_term": "linq"
@@ -22,11 +22,11 @@ module.exports = (req,res) => {
           "ratio": "0.92",
           "secondary_term": "sql server"
       }],
-      showResult: false
+      "showResult": false
       },
       {
-      primary_term: "java",
-      associated_terms: [{
+      "primary_term": "java",
+      "associated_terms": [{
           "number_of_times": 72,
           "ratio": "0.72",
           "secondary_term": "jersey"
@@ -52,11 +52,11 @@ module.exports = (req,res) => {
           "secondary_term": "tomcat"
       }
       ],
-      showResult: false
+      "showResult": false
       },
       {
-      primary_term: "iOS",
-      associated_terms: [{
+      "primary_term": "iOS",
+      "associated_terms": [{
           "number_of_times": 57,
           "ratio": "0.57",
           "secondary_term": "cocoa"
@@ -72,11 +72,11 @@ module.exports = (req,res) => {
           "secondary_term": "xcode"
       }
       ],
-      showResult: false
+      "showResult": false
       }
     ]
-	};
+	})
 		
-    res.json(primary_skills);
-    console.log('Sent primary_skills');
+    //res.json(primary_skills);
+    //console.log('Sent primary_skills');
 });
