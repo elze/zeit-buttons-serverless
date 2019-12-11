@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
@@ -6,86 +5,85 @@ import logo from './logo.svg';
 import './App.css';
 
 import {
-	TOGGLE_BUTTON,
-	toggleButton
+	toggleButton,
+	stateFromBackend
 } from './actions/actions'
 
+
 class App extends Component {
+	static defaultProps = { primary_skills: []};
 
-  static defaultProps = {
-    //button_text: "Aquamarine", class_name: "appbutton-default"
-    primary_term: "C#",
-  //primarySkills: [{primary_term: "C#"}, {primary_term: ".NET"}, {primary_term: "Javascript"}, {primary_term: "Angular.js"}, {primary_term: "React.js"}], 
-  associated_terms: [{
-    "number_of_times": 50,
-    "ratio": "0.500",
-    "secondary_term": "rest"
-     }, 
-     {
-      "number_of_times": 76,
-      "ratio": "0.760",
-      "secondary_term": "javascript"
-    },
-    {
-      "number_of_times": 137,
-      "ratio": "0.93",
-      "secondary_term": "asp"
-    },
-    {
-      "number_of_times": 65,
-      "ratio": "0.6",
-      "secondary_term": "sql server"
-    }            
-  ],     
-  //showResults: showResultsHash
-  //showResults: {"C#": false, ".NET": false, "Javascript": false, "Angular.js": false, "React.js": false}
-  showResult: false
-  }
-
-  constructor(props) {
-    super(props);
-  }
-
-  //dispatchButtonToggle(bText) {
-  dispatchButtonToggle(primaryTerm, showRes) {
-	  this.props.store.dispatch(toggleButton(showRes));
-  }
-
+  callApi = async () => {
+    const response = await fetch('/api/skills');
+	console.log(`callApi: returned from fetch`);
+    const body = await response.json();
+	console.log(`callApi: got response.json() ; response.status = ${response.status}`);
+    if (response.status !== 200) {
+		throw Error(body.message);
+	}
+    return body;
+  };	
+  
+  componentDidMount() {
+    this.callApi()
+	  .then(res => {
+		console.log(`componentDidMount: res.primary_skills = ${res.primary_skills}`);
+		this.props.setStateFromBackend(res.primary_skills);
+		console.log(`componentDidMount: this.props.primary_skills = ${this.props.primary_skills}`);
+	  })
+      .catch(err => console.log(err));
+  }  
 
   render() {
     return (
       <div className="App">
-        <header className="App-header">
+        <header>
           <h1 className="App-title">Welcome to SkillClusters!</h1>
         </header>
-          <button className={'btn btn-info btn-md button-with-margin ' + this.props.class_name} href="none" onClick={() => this.dispatchButtonToggle(this.props.primary_term, this.props.showResult)}>{this.props.primary_term}</button>
+        {
+          this.props.primary_skills.map((primarySkill, ind) => { 
+            return (
+            <div key={primarySkill.primary_term}>
+            <button key={primarySkill.primary_term} className={'btn btn-info btn-md button-with-margin ' + this.props.class_name} href="none"
+            onClick={() => this.props.toggleSecondarySkills(ind)}>
+             {primarySkill.primary_term}
+            </button>
           <div>
-            { 
-              this.props.showResult ? 
-              <span> {
-              this.props.associated_terms.map((secondarySkill) => 
-              <button className="btn btn-outline-dark button-with-margin">{ secondarySkill.secondary_term }</button>
-              )
+          { 
+            primarySkill.showResult ? 
+            <span> {
+            primarySkill.associated_terms.map((secondarySkill) => {
+				console.log(`${primarySkill.primary_term}: showResult should be true`);
+              return <button key={secondarySkill.secondary_term} className="btn btn-outline-dark button-with-margin">{ secondarySkill.secondary_term }</button>
             }
-              </span>
-              : null 
+            )
             }
-          </div>
+            </span>
+            : console.log(`${primarySkill.primary_term}: No showResult for you`)
+          }
+        </div>
+        </div>
+		  )
+          }
+          )
+        }
       </div>
     );
+
   }
 }
 
 const mapStateToProps = state => {
   return {
-    showResult: state.showResult
+	primary_skills: state.primary_skills
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({toggleButton}, dispatch);
+  return {
+    toggleSecondarySkills: (ind) => dispatch(toggleButton(ind)),
+	setStateFromBackend: (primary_skills) => dispatch(stateFromBackend(primary_skills))
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
-
-//export default App;
