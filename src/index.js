@@ -5,9 +5,10 @@ import { bindActionCreators, createStore } from 'redux'
 import connect from 'react-redux';
 import './index.css';
 import App from './App';
-import buttonApp from './actions/reducers'
+import reducer from './actions/reducers'
+import 'bootstrap/dist/css/bootstrap.css';
 
-const store = createStore(buttonApp)
+const store = createStore(reducer)
 
 ReactDOM.render(
     <Provider store={store}>
