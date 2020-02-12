@@ -14,14 +14,14 @@ module.exports = (req,res) => {
 	resp.on('end', () => {
 		console.log(JSON.parse(data).explanation);
 		let transformedData = transformResponse(data);
-		res.send(transformedData);
+		res.send({primary_skills: transformedData});
 		//res.send(data);
 	});
 
 	})	
 	
 	function transformResponse(data) {
-		for (item of data.primary_skills) {
+		for (item of data) {
 			item.showResult = false;
 		}
 		return data;
