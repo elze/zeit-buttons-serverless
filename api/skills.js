@@ -22,7 +22,7 @@ module.exports = (req,res) => {
 	
 	function transformResponse(data) {
 		for (item of data) {
-			item.showResult = false;
+			item["showResult"] = false;
 		}
 		return data;
 	}
