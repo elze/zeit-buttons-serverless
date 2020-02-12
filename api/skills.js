@@ -1,3 +1,5 @@
+const https = require('https');
+
 module.exports = (req,res) => {
 	
 	https.get('https://sc2019.skillclusters.com/sc/skills', (resp) => {
