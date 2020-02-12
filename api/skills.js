@@ -1,4 +1,30 @@
 module.exports = (req,res) => {
+	
+	https.get('https://sc2019.skillclusters.com/sc/skills', (resp) => {
+	let data = '';
+
+	// A chunk of data has been recieved.
+	resp.on('data', (chunk) => {
+		data += chunk;
+	});
+
+	// The whole response has been received. Print out the result.
+	resp.on('end', () => {
+		console.log(JSON.parse(data).explanation);
+		let transformedData = transformResponse(data);
+		res.send(transformedData);
+	});
+
+	})	
+	
+	function transformResponse(data) {
+		for (item of data.primary_skills) {
+			item.showResult = false;
+		}
+		return data;
+	}
+		
+	/**
     res.send({"primary_skills":
 	[{
       "primary_term": "C#",
@@ -76,4 +102,5 @@ module.exports = (req,res) => {
       }
     ]
 	})
+	***/
 }
