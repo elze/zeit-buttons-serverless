@@ -13,9 +13,9 @@ module.exports = (req,res) => {
 	// The whole response has been received. Print out the result.
 	resp.on('end', () => {
 		console.log(JSON.parse(data).explanation);
-		//let transformedData = transformResponse(data);
-		//res.send(transformedData);
-		res.send(data);
+		let transformedData = transformResponse(data);
+		res.send(transformedData);
+		//res.send(data);
 	});
 
 	})	
