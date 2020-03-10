@@ -15,7 +15,7 @@ module.exports = (req,res) => {
 		console.log(JSON.parse(data).explanation);
 		let transformedData = transformResponse(data);
 		//res.send({primary_skills: transformedData});
-		res.send({primary_skills: data});
+		res.send({primary_skills: JSON.parse(data)});
 		//res.send(data);
 	});
 
