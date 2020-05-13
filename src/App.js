@@ -41,6 +41,24 @@ class App extends Component {
   }  
 
   render() {
+	  Skills()
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+	primary_skills: state.primary_skills
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    toggleSecondarySkills: (ind) => dispatch(toggleButton(ind)),
+	setStateFromBackend: (primary_skills) => dispatch(stateFromBackend(primary_skills))
+  };
+}
+
+function Skills() {
     return (
       <div className="App">
         <header>
@@ -77,19 +95,6 @@ class App extends Component {
     );
 
   }
-}
 
-const mapStateToProps = state => {
-  return {
-	primary_skills: state.primary_skills
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    toggleSecondarySkills: (ind) => dispatch(toggleButton(ind)),
-	setStateFromBackend: (primary_skills) => dispatch(stateFromBackend(primary_skills))
-  };
-}
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
