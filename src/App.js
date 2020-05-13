@@ -17,7 +17,7 @@ import {
 } from './actions/actions'
 
 
-class App extends Component {
+export default function App() {
 return (
     <Router>
       <div>
@@ -51,7 +51,7 @@ return (
       </div>
     </Router>
   );
- }
+}
 
 function Home() {
   return <h2>Home</h2>;
