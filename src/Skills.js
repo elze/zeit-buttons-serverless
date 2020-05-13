@@ -4,7 +4,7 @@ import {
 } from './actions/actions'
 
 
-class Skills extends Component {
+export class Skills extends Component {
 	static defaultProps = { primary_skills: []};
 
   callApi = async () => {

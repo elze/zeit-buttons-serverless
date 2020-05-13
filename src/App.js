@@ -7,7 +7,8 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import * as fromSkills from './Skills';
+//import * as fromSkills from './Skills';
+import * from './Skills';
 import logo from './logo.svg';
 import './App.css';
 
