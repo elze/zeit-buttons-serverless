@@ -41,7 +41,7 @@ class App extends Component {
   }  
 
   render() {
-	  Skills()
+	  return Skills();
   }
 }
 
