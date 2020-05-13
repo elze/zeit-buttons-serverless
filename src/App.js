@@ -42,7 +42,7 @@ return (
             <About />
           </Route>
           <Route path="/allskills">
-            <Users />
+            <Skills />
           </Route>
           <Route path="/">
             <Home />
