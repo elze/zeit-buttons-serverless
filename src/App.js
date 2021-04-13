@@ -5,9 +5,11 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  useParams
 } from "react-router-dom";
-//import * as fromSkills from './Skills';
+import { JobPerSkillPairComponent } from './JobPerSkillPairComponent';
+import { PrimarySkillComponent } from './PrimarySkillComponent'
 import Skills from './Skills';
 import logo from './logo.svg';
 import './App.css';
@@ -33,6 +35,9 @@ return (
             <li>
               <Link to="/allskills">Skills</Link>
             </li>
+            <li>
+              <Link to="/details/2">Details</Link>
+            </li>
           </ul>
         </nav>
 
@@ -45,6 +50,15 @@ return (
           <Route path="/allskills">
             <Skills />
           </Route>
+		  <Route path="/details/:id">
+			<DetailsPage/>
+		  </Route>
+		  <Route path="/jobsnippets/:id">
+			<JobPerSkillPairComponent/>
+		  </Route>			
+		  <Route path="/primarySkill/:primaryTerm">
+			<PrimarySkillComponent/>
+		  </Route>		  
           <Route path="/">
             <Home />
           </Route>
@@ -59,6 +73,14 @@ function Home() {
 }
 
 function About() {
-  return <h2>About</h2>;
+  return <h2>About: all about SkillClusters</h2>;
 }
+
+function DetailsPage() {
+	let { id } = useParams();
+	return (		
+		 <h2>Here is a detail with id { id }</h2>
+	);
+}	
+
 //export default connect(mapStateToProps, mapDispatchToProps)(App);

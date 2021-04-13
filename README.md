@@ -1,8 +1,16 @@
+This application was created for Women Who Code Austin, TX React.s meetup to demonstrate the basics of React.js routing.
+It is deployed on Vercel here: https://zeit-buttons-serverless-elze.vercel.app/allskills
+Its backend runs Express.js. 
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## How to run it
 
-In the project directory, you can run:
+To run the Express.js server, change into the `/api` directory under the root directory, and run this:
+
+### `node index.js`
+
+Then, in the project root directory, run this to start the frontend:
 
 ### `npm start`
 
