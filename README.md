@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## How to run it
 
-To run the Express.js server, change into the `/api` directory under the root directory, and run this:
+To run the Express.js server, change into the `/api` directory under the root directory, open the `index.js` file, and uncomment the lines that it says should be uncommented to run this server locally. Those lines are commented out in order to run this app on Vercel, but they are needed to run the app on your local machine. Then run this:
 
 ### `node index.js`
 
