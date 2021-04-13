@@ -14,32 +14,6 @@ import {
 
 import utils from './Utils';
 
-/*
-  function getButtonColor(ratio){
-	  const ratioNum = parseFloat(ratio);
-	  if (ratioNum <= 0.2) {
-		  //return "#ebf6f9";
-		  return "color_02"
-	  }
-	  if (ratioNum <= 0.4) {
-		  return "color_04"
-		  //return "#d8ecf3";
-	  }
-	  if (ratioNum <= 0.6) {
-		  return "color_06"
-		  //return "#c4e2ed";
-	  }
-	  if (ratioNum <= 0.8) {
-		  return "color_08"
-		  //return "#b1d9e7";
-	  }
-	  //if (ratioNum <= 1.0) {
-		  return "color_10";
-		//return "#9dcfe1";
-	  //}
-  }  
-*/
-
 export class Skills extends Component {
 	static defaultProps = { primary_skills: []};
 
@@ -58,9 +32,9 @@ export class Skills extends Component {
   componentDidMount() {
     this.callApi()
 	  .then(res => {
-		console.log(`componentDidMount: res.primary_skills = ${res.primary_skills}`);
+		//console.log(`componentDidMount: res.primary_skills = ${res.primary_skills}`);
 		this.props.setStateFromBackend(res.primary_skills);
-		console.log(`componentDidMount: this.props.primary_skills = ${this.props.primary_skills}`);
+		//console.log(`componentDidMount: this.props.primary_skills = ${this.props.primary_skills}`);
 	  })
       .catch(err => console.log(err));
   }   	  
@@ -95,7 +69,7 @@ export class Skills extends Component {
 						primarySkill.totalCount > primarySkill.associated_terms.length ? <a href= { '/primarySkill/' + primarySkill.primary_term} ><FontAwesomeIcon icon={faEllipsisH} /></a> : ""
 					}
 					</>
-					: console.log(`${primarySkill.primary_term}: No showResult for you`)
+					: console.log(`${primarySkill.primary_term}: associated_terms are not shown`)
 				  }
 				</div>
 			 </div>
