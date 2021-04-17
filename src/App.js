@@ -73,13 +73,19 @@ function Home() {
 }
 
 function About() {
-  return <h2>About: all about SkillClusters</h2>;
+  return (
+  <div style={{padding: "10px"}}>  
+  <h2>About</h2>
+  <p>This application was written for Women Who Code Austin, TX React.js meetup to demonstrate React.js routes.</p>
+  <p><a href="https://zeit-buttons-serverless-elze.vercel.app/allskills">It is deployed on Vercel here</a>. Its backend runs Express.js. </p>
+  <p><a href="https://github.com/elze/zeit-buttons-serverless">The source code is here.</a></p>
+  </div>); 
 }
 
 function DetailsPage() {
 	let { id } = useParams();
 	return (		
-		 <h2>Here is a detail with id { id }</h2>
+		 <h2>The simplest demo of a parameterized route. The parameter id is equal to { id }</h2>
 	);
 }	
 
