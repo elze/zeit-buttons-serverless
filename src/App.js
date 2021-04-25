@@ -8,6 +8,9 @@ import {
   Link,
   useParams
 } from "react-router-dom";
+
+import { useMatomo } from '@datapunt/matomo-tracker-react'
+
 import { JobPerSkillPairComponent } from './JobPerSkillPairComponent';
 import { PrimarySkillComponent } from './PrimarySkillComponent'
 import Skills from './Skills';
@@ -53,7 +56,7 @@ return (
 		  <Route path="/details/:id">
 			<DetailsPage/>
 		  </Route>
-		  <Route path="/jobsnippets/:id">
+		  <Route path="/jobsnippets/:id/:primaryTerm/:secondaryTerm">
 			<JobPerSkillPairComponent/>
 		  </Route>			
 		  <Route path="/primarySkill/:primaryTerm">
@@ -73,6 +76,12 @@ function Home() {
 }
 
 function About() {
+	const { trackPageView, trackEvent } = useMatomo();
+    trackPageView({
+      documentTitle: 'About', // optional
+	  //href: `http://localhost:3000/about`, // optional
+	  href: `https://zeit-buttons-serverless-elze.vercel.app/about`, // optional	  
+    });	 		
   return (
   <div style={{padding: "10px"}}>  
   <h2>About</h2>
@@ -84,6 +93,12 @@ function About() {
 
 function DetailsPage() {
 	let { id } = useParams();
+	const { trackPageView, trackEvent } = useMatomo();
+    trackPageView({
+      documentTitle: 'Details', // optional
+	  //href: `http://localhost:3000/details/2`, // optional
+	  href: `https://zeit-buttons-serverless-elze.vercel.app/details/2`, // optional	  
+    });	 		
 	return (		
 		 <h2>The simplest demo of a parameterized route. The parameter id is equal to { id }</h2>
 	);

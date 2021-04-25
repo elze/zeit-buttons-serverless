@@ -107,10 +107,9 @@ app.get('/api/jobsPerSkillPair/:id', (req, res) => {
 
 // To run this server locally, uncomment the code block below. It is commented out to deploy this app on Vercel.
 
-/*
 app.listen(app.get('port'), function() {
   console.log('Express app zeit-buttons-serverless is running on port', app.get('port'));
 });
-*/
+
 
 module.exports = app

@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faExternalLinkAlt, faEllipsisH } from '@fortawesome/free-solid-svg-icons'
 
+//import ReactPiwik from 'react-piwik';
+
 import { PrimarySkillComponent } from './PrimarySkillComponent'
 
 import {
@@ -14,8 +16,16 @@ import {
 
 import utils from './Utils';
 
+/*
+const piwik = new ReactPiwik({
+  url: 'https://www.piw.geekitude.com/matomo',
+  siteId: 12,
+});
+*/
+
+
 export class Skills extends Component {
-	static defaultProps = { primary_skills: []};
+	static defaultProps = { primary_skills: []};	
 
   callApi = async () => {
     const response = await fetch('/api/skills');
@@ -30,8 +40,11 @@ export class Skills extends Component {
   };	
   
   componentDidMount() {
+	  //ReactPiwik.push(['trackPageView']);
+	  //ReactPiwik.push(['trackEvent', 'eventCategory', 'SkillsPageLoaded']);
     this.callApi()
 	  .then(res => {
+		  //ReactPiwik.push(['trackEvent', 'eventCategory', 'yourEvent']);
 		//console.log(`componentDidMount: res.primary_skills = ${res.primary_skills}`);
 		this.props.setStateFromBackend(res.primary_skills);
 		//console.log(`componentDidMount: this.props.primary_skills = ${this.props.primary_skills}`);
@@ -40,6 +53,7 @@ export class Skills extends Component {
   }   	  
 
   render() {
+	  //ReactPiwik.push(['trackPageView']);
 	      return (
       <div className="Skills">
         <header>
@@ -60,7 +74,7 @@ export class Skills extends Component {
 					<>
 					<span> {
 						primarySkill.associated_terms.map((secondarySkill) => {
-						  return <a href= { '/jobsnippets/' + secondarySkill.id} key={secondarySkill.secondary_term} className={'btn btn-outline-dark button-with-margin ' + utils.getButtonColor(secondarySkill.ratio)} >{ secondarySkill.secondary_term }&nbsp;<span className={"small"}>{secondarySkill.ratio}</span></a>
+						  return <a href= { `/jobsnippets/${secondarySkill.id}/${primarySkill.primary_term}/${secondarySkill.secondary_term}` } key={secondarySkill.secondary_term} className={'btn btn-outline-dark button-with-margin ' + utils.getButtonColor(secondarySkill.ratio)} >{ secondarySkill.secondary_term }&nbsp;<span className={"small"}>{secondarySkill.ratio}</span></a>
 						}
 						)
 					}

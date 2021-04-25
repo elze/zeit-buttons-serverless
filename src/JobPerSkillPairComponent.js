@@ -6,16 +6,34 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import Row from 'react-bootstrap/Row';
 
+import { useMatomo } from '@datapunt/matomo-tracker-react'
+
 export function JobPerSkillPairComponent() {
-	 let { id } = useParams();
+	 let { id, primaryTerm, secondaryTerm } = useParams();
+	 const { trackPageView, trackEvent } = useMatomo();
 	 console.log("JobPerSkillPairComponent begins");
 	const [excerptsFromJobs, setExcerptsFromJobs] = React.useState([]);
+	
+    trackPageView({
+      documentTitle: `JobPerSkillPairComponent ${id} : ${primaryTerm} - ${secondaryTerm}`, // optional
+	  //href: `http://localhost:3000/jobsnippets/${id}`, // optional
+	  href: `https://zeit-buttons-serverless-elze.vercel.app/jobsnippets/${id}`, // optional
+	  /*
+      customDimensions: [
+        {
+          id: 1,
+          value: 'JobPerSkillPair',
+        },
+      ], // optional
+	  */
+    });	 	
+	
 	
 	React.useEffect(() => {    
 		async function getExcerptsFromJobs(skPairId) {
 			const response = await fetch(`/api/jobsPerSkillPair/${skPairId}`);
 			const body = await response.json();			
-			console.log(`getExcerptsFromJobs: got response.json() ; response.status = ${response.status}`);
+			//console.log(`getExcerptsFromJobs: got response.json() ; response.status = ${response.status}`);
 			if (response.status !== 200) {
 				throw Error(body.message);
 			}
@@ -32,7 +50,7 @@ export function JobPerSkillPairComponent() {
 		  <div className="excerpt-list">
 			{
 				excerptsFromJobs.map(excerpt => {
-					console.log(`excerpt = ${JSON.stringify(excerpt.job_ad_snippet)}`);
+					//console.log(`excerpt = ${JSON.stringify(excerpt.job_ad_snippet)}`);
 					return (
 					<Row key={excerpt.job_file_name} style={{ marginTop: '10px' }}>
 		 <Card border="primary" style={{ width: '35rem' }}>

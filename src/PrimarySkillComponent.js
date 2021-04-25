@@ -6,6 +6,8 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import utils from './Utils';
 
+import { useMatomo } from '@datapunt/matomo-tracker-react'
+
 function getAdditionalButtonClass(currentSortingOrder, sortingOrder) {
 	if (currentSortingOrder === sortingOrder) {
 		return "btn-primary";
@@ -29,7 +31,9 @@ function useQuery() {
 
 export function PrimarySkillComponent() {
 	 let { primaryTerm } = useParams();
+	 const { trackPageView, trackEvent } = useMatomo();
 	 console.log("PrimarySkillComponent begins");
+	 
 	const [primarySkill, setPrimarySkill] = React.useState([]);
 	const query = useQuery();
 	let sortBy = sortByRatio;
@@ -37,6 +41,18 @@ export function PrimarySkillComponent() {
 	if (sortParam === "name") {
 		sortBy = sortAlphabetically;
 	}
+	
+    trackPageView({
+      documentTitle: `Primary skill component ${primaryTerm}`, // optional
+	  //href: `http://localhost:3000/primarySkill/${primaryTerm}?sort=${sortParam}`, // optional
+	  href: `https://zeit-buttons-serverless-elze.vercel.app/primarySkill/${primaryTerm}?sort=${sortParam}`, // optional	  
+      customDimensions: [
+        {
+          id: 1,
+          value: 'Primary skill',
+        },
+      ], // optional
+    });	 	
 	
 	React.useEffect(() => {    
 		async function getPrimarySkill(skillName) {
