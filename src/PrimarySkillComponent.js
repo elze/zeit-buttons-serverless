@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useEffect} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { useLocation, useParams } from "react-router-dom";
@@ -43,6 +43,8 @@ export function PrimarySkillComponent() {
 	if (sortParam === "name") {
 		sortBy = sortAlphabetically;
 	}
+	const primaryTermRef = useRef(); 
+	primaryTermRef.current = primaryTerm;
 	
     trackPageView({
       documentTitle: `Primary skill component ${primaryTerm}`, // optional
@@ -79,8 +81,8 @@ export function PrimarySkillComponent() {
 	</Spinner>	
 	 </div>
      <div>
-		<button key={primarySkill.primary_term} className={'btn btn-info btn-md button-with-margin '} href="none">
-             {primarySkill.primary_term}
+		<button key={primaryTermRef.current} className={'btn btn-info btn-md button-with-margin '} href="none">
+             {primaryTermRef.current}
         </button>
 		<a href={ '/primarySkill/' + primarySkill.primary_term + '?sort=name'} className={'btn btn-sm button-with-margin ' + getAdditionalButtonClass(sortParam, 'name')}>Sort by name</a>&nbsp;
 		<a href={ '/primarySkill/' + primarySkill.primary_term + '?sort=ratio'} className={'btn btn-sm button-with-margin ' + getAdditionalButtonClass(sortParam, 'ratio')}>Sort by ratio</a>
