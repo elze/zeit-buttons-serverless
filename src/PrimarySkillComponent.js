@@ -2,6 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { useLocation, useParams } from "react-router-dom";
+import Spinner from 'react-bootstrap/Spinner'
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import utils from './Utils';
@@ -35,6 +36,7 @@ export function PrimarySkillComponent() {
 	 console.log("PrimarySkillComponent begins");
 	 
 	const [primarySkill, setPrimarySkill] = React.useState([]);
+	//const [primarySkillState, setPrimarySkillState] = React.useState([]);
 	const query = useQuery();
 	let sortBy = sortByRatio;
 	const sortParam = query.get("sort");
@@ -56,6 +58,7 @@ export function PrimarySkillComponent() {
 	
 	React.useEffect(() => {    
 		async function getPrimarySkill(skillName) {
+			//setPrimarySkillState({dataLoading: true, primarySkill: {}});
 			const response = await fetch(`/api/primarySkill/${skillName}`);
 			const body = await response.json();			
 			console.log(`getExcerptsFromJobs: got response.json() ; response.status = ${response.status}`);
@@ -63,12 +66,19 @@ export function PrimarySkillComponent() {
 				throw Error(body.message);
 			}
 			setPrimarySkill(body);
+			//setPrimarySkillState({dataLoading: false, primarySkill: body});
 		}
 		getPrimarySkill(primaryTerm);
 
 	}, []);		
   return (
-     <div key={primarySkill.primary_term}>
+	<>
+	 <div className="text-center" style={{ display: primarySkill.primary_term ? "none" : "block" }}>
+	<Spinner animation="border" role="status">
+	  <span className="sr-only">Loading...</span>
+	</Spinner>	
+	 </div>
+     <div>
 		<button key={primarySkill.primary_term} className={'btn btn-info btn-md button-with-margin '} href="none">
              {primarySkill.primary_term}
         </button>
@@ -77,12 +87,13 @@ export function PrimarySkillComponent() {
         <div>
             <span> {
             primarySkill?.associated_terms?.sort(sortBy).map((secondarySkill) => {
-              return <a href= {'/jobsnippets/' + secondarySkill.id} key={secondarySkill.secondary_term} key={secondarySkill.secondary_term} className={'btn btn-outline-dark button-with-margin ' + utils.getButtonColor(secondarySkill.ratio)}>{ secondarySkill.secondary_term }&nbsp;<span className={"small"}>{secondarySkill.ratio}</span></a>
+              return <a href= {`/jobsnippets/${secondarySkill.id}/${primarySkill.primary_term}/${secondarySkill.secondary_term}`} key={secondarySkill.secondary_term} key={secondarySkill.secondary_term} className={'btn btn-outline-dark button-with-margin ' + utils.getButtonColor(secondarySkill.ratio)}>{ secondarySkill.secondary_term }&nbsp;<span className={"small"}>{secondarySkill.ratio}</span></a>
             }
             )
             }
             </span>
         </div>
      </div>
-	);
+	</>
+  );
 }		

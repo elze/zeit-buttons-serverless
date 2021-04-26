@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useRef, useEffect} from "react";
 import { useParams } from "react-router-dom";
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import ListGroup from 'react-bootstrap/ListGroup';
 import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import Row from 'react-bootstrap/Row';
+import Spinner from 'react-bootstrap/Spinner'
 
 import { useMatomo } from '@datapunt/matomo-tracker-react'
 
@@ -12,7 +13,11 @@ export function JobPerSkillPairComponent() {
 	 let { id, primaryTerm, secondaryTerm } = useParams();
 	 const { trackPageView, trackEvent } = useMatomo();
 	 console.log("JobPerSkillPairComponent begins");
-	const [excerptsFromJobs, setExcerptsFromJobs] = React.useState([]);
+	 const [excerptsFromJobs, setExcerptsFromJobs] = React.useState([]);
+	 const primaryTermRef = useRef(); 
+	 const secondaryTermRef = useRef(); 
+	 primaryTermRef.current = primaryTerm;
+	 secondaryTermRef.current = secondaryTerm;
 	
     trackPageView({
       documentTitle: `JobPerSkillPairComponent ${id} : ${primaryTerm} - ${secondaryTerm}`, // optional
@@ -47,6 +52,13 @@ export function JobPerSkillPairComponent() {
 	return (
 	
 		<Container className="JobPerSkillPairComponent">
+		<h3>Snippets of job ads that contain { primaryTermRef.current } and { secondaryTermRef.current } </h3>
+		  <div className="text-center" style={{ display: excerptsFromJobs && excerptsFromJobs.length > 0 ? "none" : "block" }}>
+			<Spinner animation="border" role="status">
+			  <span className="sr-only">Loading...</span>
+			</Spinner>	
+		  </div>
+		
 		  <div className="excerpt-list">
 			{
 				excerptsFromJobs.map(excerpt => {
