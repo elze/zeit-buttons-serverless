@@ -9,6 +9,9 @@ import {
   useParams
 } from "react-router-dom";
 
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+
 import { useMatomo } from '@datapunt/matomo-tracker-react'
 
 import { JobPerSkillPairComponent } from './JobPerSkillPairComponent';
@@ -27,29 +30,15 @@ export default function App() {
 return (
     <Router>
       <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-            <li>
-              <Link to="/allskills">Skills</Link>
-            </li>
-            <li>
-              <Link to="/details/2">Details</Link>
-            </li>
-          </ul>
-        </nav>
+	  <Navbar bg="light" expand="lg">
+		  <Nav.Link href="/">Home</Nav.Link>
+		  <Nav.Link href="/allskills">Skills</Nav.Link>
+		  <Nav.Link href="/details/2">Details</Nav.Link>
+	 </Navbar>
 
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-          <Route path="/about">
-            <About />
-          </Route>
           <Route path="/allskills">
             <Skills />
           </Route>
@@ -71,11 +60,8 @@ return (
   );
 }
 
-function Home() {
-  return <h2>Home</h2>;
-}
 
-function About() {
+function Home() {
 	const { trackPageView, trackEvent } = useMatomo();
     trackPageView({
       documentTitle: 'About', // optional
@@ -88,6 +74,7 @@ function About() {
   <p>This application was written for Women Who Code Austin, TX React.js meetup to demonstrate React.js routes.</p>
   <p><a href="https://zeit-buttons-serverless-elze.vercel.app/allskills">It is deployed on Vercel here</a>. Its backend runs Express.js. </p>
   <p><a href="https://github.com/elze/zeit-buttons-serverless">The source code is here.</a></p>
+  <p><a href="http://www.geekitude.com">The author's website is here.</a></p>
   </div>); 
 }
 
