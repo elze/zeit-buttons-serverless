@@ -76,9 +76,9 @@ export function PrimarySkillComponent() {
   return (
 	<>
 	 <div className="text-center" style={{ display: primarySkill.primary_term ? "none" : "block" }}>
-	<Spinner animation="border" role="status">
-	  <span className="sr-only">Loading...</span>
-	</Spinner>	
+		<Spinner animation="border" role="status">
+		  <span className="sr-only">Loading...</span>
+		</Spinner>	
 	 </div>
      <div>
 		<button key={primaryTermRef.current} className={'btn btn-info btn-md button-with-margin '} href="none">

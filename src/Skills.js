@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faExternalLinkAlt, faEllipsisH } from '@fortawesome/free-solid-svg-icons'
 
+import Spinner from 'react-bootstrap/Spinner';
+
 //import ReactPiwik from 'react-piwik';
 
 import { PrimarySkillComponent } from './PrimarySkillComponent'
@@ -59,6 +61,11 @@ export class Skills extends Component {
         <header>
           <h1 className="Skills-title">Welcome to SkillClusters!</h1>
         </header>
+		 <div className="text-center" style={{ display: this.props?.primary_skills && this.props?.primary_skills.length > 0 ? "none" : "block" }}>
+			<Spinner animation="border" role="status">
+			  <span className="sr-only">Loading...</span>
+			</Spinner>	
+		 </div>		
         {
           this.props.primary_skills.map((primarySkill, ind) => { 
             return (
