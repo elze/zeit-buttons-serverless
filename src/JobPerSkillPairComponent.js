@@ -39,7 +39,7 @@ export function JobPerSkillPairComponent(props) {
     });	 	
 	
 	
-	React.useEffect(() => {    
+	useEffect(() => {    
 		async function getExcerptsFromJobs(skPairId) {
 			const response = await fetch(`/api/jobsPerSkillPair/${skPairId}`);
 			const body = await response.json();			

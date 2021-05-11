@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
-import { bindActionCreators, createStore } from 'redux'
-import connect from 'react-redux';
-
+import { createStore } from 'redux'
 import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react'
 
 import './index.css';
-import App from './App';
+import AppWrapper from './App';
+//import { Test } from './App';
+//import ModalGalleryExample from './ModalGalleryExample'
+//import PrimarySkillStandaloneExample from './PrimarySkillStandaloneComponent';
 import reducer from './actions/reducers'
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -35,11 +36,12 @@ const instance = createInstance({
 
 const store = createStore(reducer)
 
+
 ReactDOM.render(
 	<MatomoProvider value={instance}>
     <Provider store={store}>
-     <App store={store} />
+     <AppWrapper store={store} />
     </Provider>,
 	</MatomoProvider>,
     document.getElementById('root'));
-    
+	

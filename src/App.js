@@ -1,12 +1,8 @@
-import React, { Component } from 'react';
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  useHistory,
   useLocation,
   useParams
 } from "react-router-dom";
@@ -20,14 +16,7 @@ import { JobPerSkillPairComponent } from './JobPerSkillPairComponent';
 import { JobSnippetModal } from './JobSnippetModal';
 import { PrimarySkillComponent} from './PrimarySkillComponent'
 import Skills from './Skills';
-import logo from './logo.svg';
 import './App.css';
-
-import {
-	toggleButton,
-	stateFromBackend
-} from './actions/actions'
-
 
 export default function AppWrapper() {
   return (

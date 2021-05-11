@@ -1,14 +1,9 @@
 import React, {useRef, useEffect} from "react";
-import ReactDOM from 'react-dom';
+//import ReactDOM from 'react-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheckCircle, faExternalLinkAlt, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
-import { BrowserRouter as Router, Switch, Route, Link, useHistory, useLocation, useParams } from "react-router-dom";
-import Modal from 'react-bootstrap/Modal';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { Link, useLocation, useParams } from "react-router-dom";
 import Spinner from 'react-bootstrap/Spinner'
-import ToggleButton from 'react-bootstrap/ToggleButton';
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
-import { JobPerSkillPairComponent } from './JobPerSkillPairComponent';
-import { JobSnippetModal } from './JobSnippetModal';
 import utils from './Utils';
 
 import { useMatomo } from '@datapunt/matomo-tracker-react'
@@ -63,7 +58,7 @@ export function PrimarySkillComponent() {
       ], // optional
     });	 	
 	
-	React.useEffect(() => {    
+	useEffect(() => {    
 		async function getPrimarySkill(skillName) {
 			const response = await fetch(`/api/primarySkill/${skillName}`);
 			const body = await response.json();			
