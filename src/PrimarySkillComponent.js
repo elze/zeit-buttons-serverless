@@ -1,10 +1,14 @@
 import React, {useRef, useEffect} from "react";
+import ReactDOM from 'react-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheckCircle, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
-import { useLocation, useParams } from "react-router-dom";
+import { faCheckCircle, faExternalLinkAlt, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { BrowserRouter as Router, Switch, Route, Link, useHistory, useLocation, useParams } from "react-router-dom";
+import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner'
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+import { JobPerSkillPairComponent } from './JobPerSkillPairComponent';
+import { JobSnippetModal } from './JobSnippetModal';
 import utils from './Utils';
 
 import { useMatomo } from '@datapunt/matomo-tracker-react'
@@ -32,11 +36,11 @@ function useQuery() {
 
 export function PrimarySkillComponent() {
 	 let { primaryTerm } = useParams();
+	 let location = useLocation();
 	 const { trackPageView, trackEvent } = useMatomo();
 	 console.log("PrimarySkillComponent begins");
 	 
 	const [primarySkill, setPrimarySkill] = React.useState([]);
-	//const [primarySkillState, setPrimarySkillState] = React.useState([]);
 	const query = useQuery();
 	let sortBy = sortByRatio;
 	const sortParam = query.get("sort");
@@ -45,6 +49,7 @@ export function PrimarySkillComponent() {
 	}
 	const primaryTermRef = useRef(); 
 	primaryTermRef.current = primaryTerm;
+	let background = location.state && location.state.background;
 	
     trackPageView({
       documentTitle: `Primary skill component ${primaryTerm}`, // optional
@@ -60,7 +65,6 @@ export function PrimarySkillComponent() {
 	
 	React.useEffect(() => {    
 		async function getPrimarySkill(skillName) {
-			//setPrimarySkillState({dataLoading: true, primarySkill: {}});
 			const response = await fetch(`/api/primarySkill/${skillName}`);
 			const body = await response.json();			
 			console.log(`getExcerptsFromJobs: got response.json() ; response.status = ${response.status}`);
@@ -68,13 +72,12 @@ export function PrimarySkillComponent() {
 				throw Error(body.message);
 			}
 			setPrimarySkill(body);
-			//setPrimarySkillState({dataLoading: false, primarySkill: body});
 		}
 		getPrimarySkill(primaryTerm);
 
 	}, []);		
   return (
-	<>
+	<>	
 	 <div className="text-center" style={{ display: primarySkill.primary_term ? "none" : "block" }}>
 		<Spinner animation="border" role="status">
 		  <span className="sr-only">Loading...</span>
@@ -89,9 +92,16 @@ export function PrimarySkillComponent() {
         <div>
             <span> {
             primarySkill?.associated_terms?.sort(sortBy).map((secondarySkill) => {
-              return <a href= {`/jobsnippets/${secondarySkill.id}/${primarySkill.primary_term}/${secondarySkill.secondary_term}`} key={secondarySkill.secondary_term} key={secondarySkill.secondary_term} className={'btn btn-outline-dark button-with-margin ' + utils.getButtonColor(secondarySkill.ratio)}>{ secondarySkill.secondary_term }&nbsp;<span className={"small"}>{secondarySkill.ratio}</span></a>
+              return (
+				<span key={secondarySkill.id}>
+				<a href= {`/jobsnippets/${secondarySkill.id}/${primarySkill.primary_term}/${secondarySkill.secondary_term}`} key={secondarySkill.secondary_term} key={secondarySkill.secondary_term} className={'btn btn-outline-dark button-with-margin ' + utils.getButtonColor(secondarySkill.ratio)}>{ secondarySkill.secondary_term }&nbsp;<span className={"small"}>{secondarySkill.ratio}</span></a>
+				<Link to={{pathname: `/jobsnippetmodal/${secondarySkill.id}/${primarySkill.primary_term}/${secondarySkill.secondary_term}`, state: { background: location }}}>
+				 <FontAwesomeIcon icon={faPaperPlane} />
+				</Link>
+			</span>
+		)
             }
-            )
+			)
             }
             </span>
         </div>

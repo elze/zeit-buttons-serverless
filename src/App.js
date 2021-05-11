@@ -6,6 +6,8 @@ import {
   Switch,
   Route,
   Link,
+  useHistory,
+  useLocation,
   useParams
 } from "react-router-dom";
 
@@ -15,7 +17,8 @@ import Navbar from 'react-bootstrap/Navbar';
 import { useMatomo } from '@datapunt/matomo-tracker-react'
 
 import { JobPerSkillPairComponent } from './JobPerSkillPairComponent';
-import { PrimarySkillComponent } from './PrimarySkillComponent'
+import { JobSnippetModal } from './JobSnippetModal';
+import { PrimarySkillComponent} from './PrimarySkillComponent'
 import Skills from './Skills';
 import logo from './logo.svg';
 import './App.css';
@@ -26,9 +29,19 @@ import {
 } from './actions/actions'
 
 
-export default function App() {
-return (
+export default function AppWrapper() {
+  return (
     <Router>
+      <App />
+    </Router>
+  );
+}	
+
+export function App() {
+	let location = useLocation();
+	
+	let background = location.state && location.state.background;	
+	return (
       <div>
 	  <Navbar bg="light" expand="lg">
 		  <Nav.Link href="/">Home</Nav.Link>
@@ -38,28 +51,28 @@ return (
 
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
-        <Switch>
+        <Switch location={background || location}>
           <Route path="/allskills">
             <Skills />
           </Route>
 		  <Route path="/details/:id">
 			<DetailsPage/>
 		  </Route>
-		  <Route path="/jobsnippets/:id/:primaryTerm/:secondaryTerm">
-			<JobPerSkillPairComponent/>
-		  </Route>			
 		  <Route path="/primarySkill/:primaryTerm">
 			<PrimarySkillComponent/>
-		  </Route>		  
-          <Route path="/">
+		  </Route>
+		  <Route exact path="/jobsnippetmodal/:id/:primaryTerm/:secondaryTerm" component={JobSnippetModal} />		  
+		  <Route path="/jobsnippets/:id/:primaryTerm/:secondaryTerm">
+			<JobPerSkillPairComponent/>
+		  </Route>
+          <Route exact path="/">
             <Home />
           </Route>
         </Switch>
+		{background && <Route exact path="/jobsnippetmodal/:id/:primaryTerm/:secondaryTerm" component={JobSnippetModal}  />}
       </div>
-    </Router>
   );
 }
-
 
 function Home() {
 	const { trackPageView, trackEvent } = useMatomo();
@@ -90,5 +103,9 @@ function DetailsPage() {
 		 <h2>The simplest demo of a parameterized route. The parameter id is equal to { id }</h2>
 	);
 }	
+
+export function Test() {
+	return <h2>This is a test page</h2>
+}
 
 //export default connect(mapStateToProps, mapDispatchToProps)(App);

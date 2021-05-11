@@ -9,8 +9,13 @@ import Spinner from 'react-bootstrap/Spinner'
 
 import { useMatomo } from '@datapunt/matomo-tracker-react'
 
-export function JobPerSkillPairComponent() {
-	 let { id, primaryTerm, secondaryTerm } = useParams();
+export function JobPerSkillPairComponent(props) {
+	let { id, primaryTerm, secondaryTerm } = useParams();
+	if (props.id && props.primaryTerm && props.secondaryTerm) {
+		id = props.id;
+		primaryTerm = props.primaryTerm;
+		secondaryTerm = props.secondaryTerm;
+	}
 	 const { trackPageView, trackEvent } = useMatomo();
 	 console.log("JobPerSkillPairComponent begins");
 	 const [excerptsFromJobs, setExcerptsFromJobs] = React.useState([]);
