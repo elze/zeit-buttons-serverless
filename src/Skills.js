@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheckCircle, faExternalLinkAlt, faEllipsisH } from '@fortawesome/free-solid-svg-icons'
+import { faExternalLinkAlt, faEllipsisH } from '@fortawesome/free-solid-svg-icons'
 
 import Spinner from 'react-bootstrap/Spinner';
 
-//import ReactPiwik from 'react-piwik';
-
-import { PrimarySkillComponent } from './PrimarySkillComponent'
+import ReactPiwik from 'react-piwik';
 
 import {
 	toggleButton,
@@ -18,16 +14,11 @@ import {
 
 import utils from './Utils';
 
-/*
-const piwik = new ReactPiwik({
-  url: 'https://www.piw.geekitude.com/matomo',
-  siteId: 12,
-});
-*/
-
+// The commented-out line is not necessary, because ReactPiwik push function replaces _paq.push
+//var _paq = window._paq = window._paq || [];
 
 export class Skills extends Component {
-	static defaultProps = { primary_skills: []};	
+	static defaultProps = { primary_skills: []};		
 
   callApi = async () => {
     const response = await fetch('/api/skills');
@@ -42,11 +33,10 @@ export class Skills extends Component {
   };	
   
   componentDidMount() {
-	  //ReactPiwik.push(['trackPageView']);
-	  //ReactPiwik.push(['trackEvent', 'eventCategory', 'SkillsPageLoaded']);
+	  ReactPiwik.push(['trackPageView']);
+	  ReactPiwik.push(['trackEvent', 'eventCategory', 'SkillsPageLoaded']);
     this.callApi()
 	  .then(res => {
-		  //ReactPiwik.push(['trackEvent', 'eventCategory', 'yourEvent']);
 		//console.log(`componentDidMount: res.primary_skills = ${res.primary_skills}`);
 		this.props.setStateFromBackend(res.primary_skills);
 		//console.log(`componentDidMount: this.props.primary_skills = ${this.props.primary_skills}`);
@@ -55,7 +45,6 @@ export class Skills extends Component {
   }   	  
 
   render() {
-	  //ReactPiwik.push(['trackPageView']);
 	      return (
       <div className="Skills">
         <header>
@@ -71,7 +60,14 @@ export class Skills extends Component {
             return (
 			 <div key={primarySkill.primary_term}>
 				<button key={primarySkill.primary_term} className={'btn btn-info btn-md button-with-margin ' + this.props.class_name} href="none"
-					onClick={() => this.props.toggleSecondarySkills(ind)}>
+					onClick={() => {
+						const actionToBePerformed = primarySkill.showResult ? "collapsed" : "expanded";
+						this.props.toggleSecondarySkills(ind); 
+						// The commented-out line is not necessary, because the next line replaces it
+						//_paq.push(['trackEvent', 'Skills', 'Opening a skill keyword']);
+						ReactPiwik.push(['trackEvent', `Primary skill ${actionToBePerformed}`, primarySkill.primary_term]);
+					}
+						}>
 					 {primarySkill.primary_term}
 				</button>
 				<a href= { '/primarySkill/' + primarySkill.primary_term + '?sort=name'} ><FontAwesomeIcon icon={faExternalLinkAlt} /></a>
@@ -80,7 +76,7 @@ export class Skills extends Component {
 					primarySkill.showResult ? 
 					<>
 					<span> {
-						primarySkill.associated_terms.map((secondarySkill) => {
+						primarySkill.associated_terms.map((secondarySkill) => {							
 						  return <a href= { `/jobsnippets/${secondarySkill.id}/${primarySkill.primary_term}/${secondarySkill.secondary_term}` } key={secondarySkill.secondary_term} className={'btn btn-outline-dark button-with-margin ' + utils.getButtonColor(secondarySkill.ratio)} >{ secondarySkill.secondary_term }&nbsp;<span className={"small"}>{secondarySkill.ratio}</span></a>
 						}
 						)

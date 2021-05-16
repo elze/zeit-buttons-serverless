@@ -33,7 +33,6 @@ const instance = createInstance({
   }
 })
 
-
 const store = createStore(reducer)
 
 

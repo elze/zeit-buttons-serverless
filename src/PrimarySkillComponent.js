@@ -44,7 +44,6 @@ export function PrimarySkillComponent() {
 	}
 	const primaryTermRef = useRef(); 
 	primaryTermRef.current = primaryTerm;
-	let background = location.state && location.state.background;
 	
     trackPageView({
       documentTitle: `Primary skill component ${primaryTerm}`, // optional
