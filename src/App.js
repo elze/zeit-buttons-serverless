@@ -12,11 +12,20 @@ import Navbar from 'react-bootstrap/Navbar';
 
 import { useMatomo } from '@datapunt/matomo-tracker-react'
 
+import ReactPiwik from 'react-piwik';
+
 import { JobPerSkillPairComponent } from './JobPerSkillPairComponent';
 import { JobSnippetModal } from './JobSnippetModal';
 import { PrimarySkillComponent} from './PrimarySkillComponent'
 import Skills from './Skills';
 import './App.css';
+
+const piwik = new ReactPiwik({
+  url: 'https://www.piw.geekitude.com/matomo',
+  siteId: 1,
+});
+
+//const trackAtConnect = false;
 
 export default function AppWrapper() {
   return (

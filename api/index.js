@@ -55,14 +55,25 @@ app.get('/api/primarySkill/:skillName', (req, res) => {
 
 		// The whole response has been received. Print out the result.
 		resp.on('end', () => {
-			console.log(JSON.parse(data).explanation);
-			//res.send({primary_skills: transformedData});
-			const dataJson = JSON.parse(data);
-			const primarySkill = dataJson.find(x => x.primary_term.toLowerCase() === skillName.toLowerCase());
-			let associated_terms_sorted = primarySkill.associated_terms.sort((a, b) => parseFloat(b.ratio) - parseFloat(a.ratio));					
-			primarySkill.associated_terms = associated_terms_sorted;			
-			//console.log(`/api/primarySkill/:skillName: ${JSON.stringify(primarySkill)}`);
-			res.send(primarySkill);
+			try {
+				//res.send({primary_skills: transformedData});
+				const dataJson = JSON.parse(data);
+				const primarySkill = dataJson.find(x => x.primary_term.toLowerCase() === skillName.toLowerCase());
+				let associated_terms_sorted = primarySkill.associated_terms.sort((a, b) => parseFloat(b.ratio) - parseFloat(a.ratio));					
+				primarySkill.associated_terms = associated_terms_sorted;			
+				//console.log(`/api/primarySkill/:skillName: ${JSON.stringify(primarySkill)}`);
+				res.send(primarySkill);
+			}
+			catch(err) {
+				var errMessage = `${err}`;
+				console.log(`err = ${err}`);
+				res.status(500).send({
+					error: {
+						status: 500,
+						message: errMessage
+					},
+				});
+			}
 		});
 	});
 })
