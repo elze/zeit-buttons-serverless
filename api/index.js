@@ -107,11 +107,23 @@ app.get('/api/jobsPerSkillPair/:id', (req, res) => {
 			data += chunk;
 		});
 
+		try {
 		// The whole response has been received. Print out the result.
-		resp.on('end', () => {
-			//console.log(JSON.parse(data).explanation);
-			res.send(JSON.parse(data));
-		});
+			resp.on('end', () => {
+				//console.log(JSON.parse(data).explanation);
+				res.send(JSON.parse(data));
+			});
+		}
+		catch(err) {
+			var errMessage = `${err}`;
+			console.log(`err = ${err}`);
+			res.status(500).send({
+				error: {
+					status: 500,
+					message: errMessage
+				},
+			});
+		}
 	});
 })
 

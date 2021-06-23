@@ -47,7 +47,11 @@ export function JobPerSkillPairComponent(props) {
 			const response = await fetch(`/api/jobsPerSkillPair/${skPairId}`);
 			if (response.status !== 200) {
 				//throw Error(body.message);
-				excerptStateCombo = {excerptsFromJobs: [], error: response.statusText};
+				const error = await response.json();
+				const errorMessage = error.error?.message;
+				trackEvent({ category: `jobsPerSkillPair ${skPairId} - ${primaryTermRef?.current}, ${secondaryTermRef?.current} retrieval error`, action: errorMessage });				
+				excerptStateCombo = {excerptsFromJobs: [], error: errorMessage};
+				console.log(`getExcerptsFromJobs: an error occurred: excerptStateCombo = ${JSON.stringify(excerptStateCombo)}`);
 			}
 			else {
 				const body = await response.json();			
