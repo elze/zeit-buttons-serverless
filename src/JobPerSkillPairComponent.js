@@ -1,5 +1,6 @@
 import React, {useRef, useEffect} from "react";
 import { useParams } from "react-router-dom";
+import Alert from 'react-bootstrap/Alert';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -18,7 +19,8 @@ export function JobPerSkillPairComponent(props) {
 	}
 	 const { trackPageView, trackEvent } = useMatomo();
 	 console.log("JobPerSkillPairComponent begins");
-	 const [excerptsFromJobs, setExcerptsFromJobs] = React.useState([]);
+	 //const [excerptsFromJobs, setExcerptsFromJobs] = React.useState([]);
+	 const [excerptState, setExcerptState] = React.useState([]);
 	 const primaryTermRef = useRef(); 
 	 const secondaryTermRef = useRef(); 
 	 primaryTermRef.current = primaryTerm;
@@ -41,13 +43,19 @@ export function JobPerSkillPairComponent(props) {
 	
 	useEffect(() => {    
 		async function getExcerptsFromJobs(skPairId) {
+			let excerptStateCombo;
 			const response = await fetch(`/api/jobsPerSkillPair/${skPairId}`);
-			const body = await response.json();			
-			//console.log(`getExcerptsFromJobs: got response.json() ; response.status = ${response.status}`);
 			if (response.status !== 200) {
-				throw Error(body.message);
+				//throw Error(body.message);
+				excerptStateCombo = {excerptsFromJobs: [], error: response.statusText};
 			}
-			setExcerptsFromJobs(body);
+			else {
+				const body = await response.json();			
+				//console.log(`getExcerptsFromJobs: got response.json() ; response.status = ${response.status}`);
+				excerptStateCombo = {excerptsFromJobs: body, error: null};				
+			}
+			//setExcerptsFromJobs(body);
+			setExcerptState(excerptStateCombo);
 		}
 		getExcerptsFromJobs(id);
 
@@ -58,15 +66,20 @@ export function JobPerSkillPairComponent(props) {
 	
 		<Container className="JobPerSkillPairComponent">
 		<h3>Snippets of job ads that contain { primaryTermRef.current } and { secondaryTermRef.current } </h3>
-		  <div className="text-center" style={{ display: excerptsFromJobs && excerptsFromJobs.length > 0 ? "none" : "block" }}>
+		  <div className="text-center" style={{ display: excerptState.excerptsFromJobs && excerptState.excerptsFromJobs.length > 0 ? "none" : "block" }}>
 			<Spinner animation="border" role="status">
 			  <span className="sr-only">Loading...</span>
 			</Spinner>	
 		  </div>
+		 <div className="text-center" style={{ display: excerptState.error ? "block" : "none" }}>
+		 <Alert variant="danger">
+			An error occurred: { excerptState.error }
+		 </Alert>
+		 </div>	 
 		
-		  <div className="excerpt-list">
+		  <div className="excerpt-list" style={{ display: excerptState.excerptsFromJobs && excerptState.excerptsFromJobs.length > 0 ? "block" : "none" }}>
 			{
-				excerptsFromJobs.map(excerpt => {
+				excerptState?.excerptsFromJobs?.map(excerpt => {
 					//console.log(`excerpt = ${JSON.stringify(excerpt.job_ad_snippet)}`);
 					return (
 					<Row key={excerpt.job_file_name} style={{ marginTop: '10px' }}>
