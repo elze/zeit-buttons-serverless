@@ -71,6 +71,9 @@ app.get('/api/primarySkill/:skillName', (req, res) => {
 				//res.send({primary_skills: transformedData});
 				const dataJson = JSON.parse(data);
 				const primarySkill = dataJson.find(x => x.primary_term.toLowerCase() === skillName.toLowerCase());
+				if (!primarySkill) {
+					throw `Primary skill ${skillName} was not found`;
+				}
 				let associated_terms_sorted = primarySkill.associated_terms.sort((a, b) => parseFloat(b.ratio) - parseFloat(a.ratio));					
 				primarySkill.associated_terms = associated_terms_sorted;			
 				//console.log(`/api/primarySkill/:skillName: ${JSON.stringify(primarySkill)}`);
