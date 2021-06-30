@@ -37,7 +37,6 @@ export function PrimarySkillComponent() {
 	 console.log("PrimarySkillComponent begins");
 	 
 	const [primarySkill, setPrimarySkill] = React.useState([]);
-	//const {loading, primarySkill, error} = useSelector((state) => ({loading: state.loading, primarySkill: state.primarySkill, error: state.error }));
 	const query = useQuery();
 	let sortBy = sortByRatio;
 	const sortParam = query.get("sort");
@@ -61,26 +60,28 @@ export function PrimarySkillComponent() {
 	
 	useEffect(() => {    
 		async function getPrimarySkill(skillName) {
-			const response = await fetch(`/api/primarySkill/${skillName}`);
-			let primarySkillCombo;
-			if (response.status !== 200) {
-				const error = await response.json();
-				const errorMessage = error.error?.message;
-				trackEvent({ category: `primarySkill ${skillName} retrieval error`, action: errorMessage });
-				primarySkillCombo = {pSkill: {}, error: `Server error: ${errorMessage}`};
-				console.log(`getPrimarySkill: an error occurred: primarySkillCombo = ${JSON.stringify(primarySkillCombo)}`);
-			}			
-			else {
-				const body = await response.json();			
-				console.log(`getExcerptsFromJobs: got response.json() ; response.status = ${response.status}`);
-				primarySkillCombo = {pSkill: body, error: null};
+			let primarySkillCombo;			
+			try {
+				const response = await fetch(`/api/primarySkill/${skillName}`);
+				if (response.status !== 200) {
+					const error = await response.json();
+					const errorMessage = error.error?.message;
+					trackEvent({ category: `primarySkill ${skillName} retrieval error`, action: errorMessage });
+					primarySkillCombo = {pSkill: {}, error: `Server error: ${errorMessage}`};
+					console.log(`getPrimarySkill: an error occurred: primarySkillCombo = ${JSON.stringify(primarySkillCombo)}`);
+				}			
+				else {
+					const body = await response.json();			
+					console.log(`getPrimarySkill: got response.json() ; response.status = ${response.status}`);
+					primarySkillCombo = {pSkill: body, error: null};
+				}
 			}
-			
-			//setPrimarySkill(primarySkill);
+			catch(err) {
+				console.log(`getPrimarySkill: a network error occurred: err = ${err}`);
+				primarySkillCombo = {pSkill: {}, error: `Server error: ${err}`};
+			}
 			setPrimarySkill(primarySkillCombo);
-			//setPrimarySkillState({loading: false, primarySkill: body});
 		}
-		//setPrimarySkillState({loading: true, primarySkill: {}});
 		getPrimarySkill(primaryTerm);
 
 	}, []);		

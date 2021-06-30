@@ -12,7 +12,7 @@ const reducer = (state = {}, action) => {
       case STATE_FROM_BACKEND:
 		console.log(`reducer case STATE_FROM_BACKEND: state = ${JSON.stringify(state)}`);
          
-		let stFromBackend = Object.assign({}, {primary_skills: action.primary_skills});
+		let stFromBackend = Object.assign({}, {primary_skills: action.primary_skills, error: action.error});
 		console.log(`reducer case STATE_FROM_BACKEND: stFromBackend = ${JSON.stringify(stFromBackend)}`);
 			
 		return stFromBackend;
@@ -22,7 +22,7 @@ const reducer = (state = {}, action) => {
 		let newPrimarySkill = Object.assign({}, state.primary_skills[action.index], {showResult: !state.primary_skills[action.index].showResult});
 		let newPS = Object.assign([...state.primary_skills], {[action.index]: newPrimarySkill});
          
-		let newState = Object.assign({}, {primary_skills: newPS} );
+		let newState = Object.assign({}, {primary_skills: newPS, error: null} );
 		console.log(`reducer case TOGGLE_BUTTON: newState = ${JSON.stringify(newState)}`);
 			
 		return newState;		
