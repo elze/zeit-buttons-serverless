@@ -32,6 +32,7 @@ function useQuery() {
 
 export function PrimarySkillComponent() {
 	 let { primaryTerm } = useParams();
+	 const primaryTermDecoded = decodeURIComponent(primaryTerm);
 	 let location = useLocation();
 	 const { trackPageView, trackEvent } = useMatomo();
 	 console.log("PrimarySkillComponent begins");
@@ -44,12 +45,12 @@ export function PrimarySkillComponent() {
 		sortBy = sortAlphabetically;
 	}
 	const primaryTermRef = useRef(); 
-	primaryTermRef.current = primaryTerm;
+	primaryTermRef.current = primaryTermDecoded;
 	
     trackPageView({
-      documentTitle: `Primary skill component ${primaryTerm}`, // optional
+      documentTitle: `Primary skill component ${primaryTermDecoded}`, // optional
 	  //href: `http://localhost:3000/primarySkill/${primaryTerm}?sort=${sortParam}`, // optional
-	  href: `https://zeit-buttons-serverless-elze.vercel.app/primarySkill/${primaryTerm}?sort=${sortParam}`, // optional	  
+	  href: `https://zeit-buttons-serverless-elze.vercel.app/primarySkill/${primaryTermDecoded}?sort=${sortParam}`, // optional	  
       customDimensions: [
         {
           id: 1,
@@ -62,7 +63,8 @@ export function PrimarySkillComponent() {
 		async function getPrimarySkill(skillName) {
 			let primarySkillCombo;			
 			try {
-				const response = await fetch(`/api/primarySkill/${skillName}`);
+				const uri = `/api/primarySkill/${skillName}`;
+				const response = await fetch(uri);
 				if (response.status !== 200) {
 					const error = await response.json();
 					const errorMessage = error.error?.message;
@@ -101,8 +103,8 @@ export function PrimarySkillComponent() {
 		<button key={primaryTermRef.current} className={'btn btn-info btn-md button-with-margin '} href="none">
              {primaryTermRef.current}
         </button>
-		<a href={ '/primarySkill/' + primarySkill.pSkill?.primary_term + '?sort=name'} className={'btn btn-sm button-with-margin ' + getAdditionalButtonClass(sortParam, 'name')}>Sort by name</a>&nbsp;
-		<a href={ '/primarySkill/' + primarySkill.pSkill?.primary_term + '?sort=ratio'} className={'btn btn-sm button-with-margin ' + getAdditionalButtonClass(sortParam, 'ratio')}>Sort by ratio</a>
+		<a href={ '/primarySkill/' + encodeURIComponent(primarySkill.pSkill?.primary_term) + '?sort=name'} className={'btn btn-sm button-with-margin ' + getAdditionalButtonClass(sortParam, 'name')}>Sort by name</a>&nbsp;
+		<a href={ '/primarySkill/' + encodeURIComponent(primarySkill.pSkill?.primary_term) + '?sort=ratio'} className={'btn btn-sm button-with-margin ' + getAdditionalButtonClass(sortParam, 'ratio')}>Sort by ratio</a>
         <div>
             <span> {
             primarySkill?.pSkill?.associated_terms?.sort(sortBy).map((secondarySkill) => {

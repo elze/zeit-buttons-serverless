@@ -23,21 +23,33 @@ app.get('/api/skills', (req, res) => {
 
 		// The whole response has been received. Print out the result.
 		resp.on('end', () => {
-			const dataJson = JSON.parse(data);
-			const transformedSkills = dataJson.map(primarySkill => {
-				primarySkill.totalCount = primarySkill.associated_terms.length;
-				let associated_terms_sorted = primarySkill.associated_terms.sort((a, b) => parseFloat(b.ratio) - parseFloat(a.ratio));
-				if (associated_terms_sorted.length > 10) {
-					const indLessThan02 = associated_terms_sorted.findIndex(x => parseFloat(x.ratio) <= 0.2);
-					const cutOffIndex = indLessThan02 > 10 ? indLessThan02 : 10;
-					associated_terms_sorted.splice(cutOffIndex);
-				}
-					
-				primarySkill.associated_terms = associated_terms_sorted;
-				return primarySkill;
-			});
-			//console.log("About to send all the skills");
-			res.send({primary_skills: transformedSkills});
+			try {			
+				const dataJson = JSON.parse(data);
+				const transformedSkills = dataJson.map(primarySkill => {
+					primarySkill.totalCount = primarySkill.associated_terms.length;
+					let associated_terms_sorted = primarySkill.associated_terms.sort((a, b) => parseFloat(b.ratio) - parseFloat(a.ratio));
+					if (associated_terms_sorted.length > 10) {
+						const indLessThan02 = associated_terms_sorted.findIndex(x => parseFloat(x.ratio) <= 0.2);
+						const cutOffIndex = indLessThan02 > 10 ? indLessThan02 : 10;
+						associated_terms_sorted.splice(cutOffIndex);
+					}
+						
+					primarySkill.associated_terms = associated_terms_sorted;
+					return primarySkill;
+				});
+				//console.log("About to send all the skills");
+				res.send({primary_skills: transformedSkills});
+			}
+			catch(err) {
+				var errMessage = `${err}`;
+				console.log(`err = ${err}`);
+				res.status(500).send({
+					error: {
+						status: 500,
+						message: errMessage
+					},
+				});
+			}			
 		});
 	});
 })

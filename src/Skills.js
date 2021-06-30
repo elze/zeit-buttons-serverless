@@ -86,7 +86,7 @@ export class Skills extends Component {
 						}>
 					 {primarySkill.primary_term}
 				</button>
-				<a href= { '/primarySkill/' + primarySkill.primary_term + '?sort=name'} ><FontAwesomeIcon icon={faExternalLinkAlt} /></a>
+				<a href= { `/primarySkill/${encodeURIComponent(primarySkill.primary_term)}?sort=name`} ><FontAwesomeIcon icon={faExternalLinkAlt} /></a>
 				<div>
 				  { 
 					primarySkill.showResult ? 
@@ -99,7 +99,7 @@ export class Skills extends Component {
 					}
 					</span>
 					{
-						primarySkill.totalCount > primarySkill.associated_terms.length ? <a href= { '/primarySkill/' + primarySkill.primary_term} ><FontAwesomeIcon icon={faEllipsisH} /></a> : ""
+						primarySkill.totalCount > primarySkill.associated_terms.length ? <a href= { `/primarySkill/${encodeURIComponent(primarySkill.primary_term)}` } ><FontAwesomeIcon icon={faEllipsisH} /></a> : ""
 					}
 					</>
 					: console.log(`${primarySkill.primary_term}: associated_terms are not shown`)
