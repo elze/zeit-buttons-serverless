@@ -54,9 +54,16 @@ export function JobPerSkillPairComponent(props) {
 				console.log(`getExcerptsFromJobs: an error occurred: excerptStateCombo = ${JSON.stringify(excerptStateCombo)}`);
 			}
 			else {
-				const body = await response.json();			
+				const excerpts = await response.json();			
+				if (!excerpts || excerpts.length === 0) {
+					const errorMessage = `Job excerpts for skill pair ${skPairId} - ${primaryTermRef?.current}, ${secondaryTermRef?.current} not found.`;
+					trackEvent({ category: `jobsPerSkillPair ${skPairId} - ${primaryTermRef?.current}, ${secondaryTermRef?.current} retrieval error`, action: errorMessage });
+					excerptStateCombo = {excerptsFromJobs: [], error: errorMessage};
+				}
+				else {
 				//console.log(`getExcerptsFromJobs: got response.json() ; response.status = ${response.status}`);
-				excerptStateCombo = {excerptsFromJobs: body, error: null};				
+					excerptStateCombo = {excerptsFromJobs: excerpts, error: null};				
+				}
 			}
 			//setExcerptsFromJobs(body);
 			setExcerptState(excerptStateCombo);
@@ -70,7 +77,7 @@ export function JobPerSkillPairComponent(props) {
 	
 		<Container className="JobPerSkillPairComponent">
 		<h3>Snippets of job ads that contain { primaryTermRef.current } and { secondaryTermRef.current } </h3>
-		  <div className="text-center" style={{ display: excerptState.excerptsFromJobs && excerptState.excerptsFromJobs.length > 0 ? "none" : "block" }}>
+		  <div className="text-center" style={{ display: excerptState.excerptsFromJobs && excerptState.excerptsFromJobs.length > 0 || excerptState.error ? "none" : "block" }}>
 			<Spinner animation="border" role="status">
 			  <span className="sr-only">Loading...</span>
 			</Spinner>	
