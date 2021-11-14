@@ -24,31 +24,30 @@ app.get('/api/skills', (req, res) => {
 		// The whole response has been received. Print out the result.
 		resp.on('end', () => {
 			try {			
-				const dataJson = JSON.parse(data);
-				const transformedSkills = dataJson.map(primarySkill => {
-					primarySkill.totalCount = primarySkill.associated_terms.length;
-					let associated_terms_sorted = primarySkill.associated_terms.sort((a, b) => parseFloat(b.ratio) - parseFloat(a.ratio));
-					if (associated_terms_sorted.length > 10) {
-						const indLessThan02 = associated_terms_sorted.findIndex(x => parseFloat(x.ratio) <= 0.2);
-						const cutOffIndex = indLessThan02 > 10 ? indLessThan02 : 10;
-						associated_terms_sorted.splice(cutOffIndex);
-					}
-						
-					primarySkill.associated_terms = associated_terms_sorted;
-					return primarySkill;
-				});
-				//console.log("About to send all the skills");
-				res.send({primary_skills: transformedSkills});
+				if (resp.statusCode === 200) {					
+					const dataJson = JSON.parse(data);
+					const transformedSkills = dataJson.map(primarySkill => {
+						primarySkill.totalCount = primarySkill.associated_terms.length;
+						let associated_terms_sorted = primarySkill.associated_terms.sort((a, b) => parseFloat(b.ratio) - parseFloat(a.ratio));
+						if (associated_terms_sorted.length > 10) {
+							const indLessThan02 = associated_terms_sorted.findIndex(x => parseFloat(x.ratio) <= 0.2);
+							const cutOffIndex = indLessThan02 > 10 ? indLessThan02 : 10;
+							associated_terms_sorted.splice(cutOffIndex);
+						}
+							
+						primarySkill.associated_terms = associated_terms_sorted;
+						return primarySkill;
+					});
+					//console.log("About to send all the skills");
+					res.send({primary_skills: transformedSkills});
+				}
+				else {
+					processErrorResponse(res, resp.statusCode, `Skillclusters remote server returned an error: ${resp.statusCode} ${resp.statusMessage}`);
+				}					
 			}
 			catch(err) {
 				var errMessage = `${err}`;
-				console.log(`err = ${err}`);
-				res.status(500).send({
-					error: {
-						status: 500,
-						message: errMessage
-					},
-				});
+				processErrorResponse(res, 500, errMessage);
 			}			
 		});
 	});
@@ -68,26 +67,24 @@ app.get('/api/primarySkill/:skillName', (req, res) => {
 		// The whole response has been received. Print out the result.
 		resp.on('end', () => {
 			try {
-				//res.send({primary_skills: transformedData});
-				const dataJson = JSON.parse(data);
-				const primarySkill = dataJson.find(x => x.primary_term.toLowerCase() === skillName.toLowerCase());
-				if (!primarySkill) {
-					throw `Primary skill ${skillName} was not found`;
+				if (resp.statusCode === 200) {			
+					const dataJson = JSON.parse(data);
+					const primarySkill = dataJson.find(x => x.primary_term.toLowerCase() === skillName.toLowerCase());
+					if (!primarySkill) {
+						throw `Primary skill ${skillName} was not found`;
+					}
+					let associated_terms_sorted = primarySkill.associated_terms.sort((a, b) => parseFloat(b.ratio) - parseFloat(a.ratio));					
+					primarySkill.associated_terms = associated_terms_sorted;			
+					//console.log(`/api/primarySkill/:skillName: ${JSON.stringify(primarySkill)}`);
+					res.send(primarySkill);
 				}
-				let associated_terms_sorted = primarySkill.associated_terms.sort((a, b) => parseFloat(b.ratio) - parseFloat(a.ratio));					
-				primarySkill.associated_terms = associated_terms_sorted;			
-				//console.log(`/api/primarySkill/:skillName: ${JSON.stringify(primarySkill)}`);
-				res.send(primarySkill);
+				else {
+					processErrorResponse(res, resp.statusCode, `Skillclusters remote server returned an error: ${resp.statusCode} ${resp.statusMessage}`);
+				}				
 			}
 			catch(err) {
 				var errMessage = `${err}`;
-				console.log(`err = ${err}`);
-				res.status(500).send({
-					error: {
-						status: 500,
-						message: errMessage
-					},
-				});
+				processErrorResponse(res, 500, errMessage);
 			}
 		});
 	});
@@ -125,29 +122,36 @@ app.get('/api/jobsPerSkillPair/:id', (req, res) => {
 		try {
 		// The whole response has been received. Print out the result.
 			resp.on('end', () => {
+				if (resp.statusCode === 200) {			
 				//console.log(JSON.parse(data).explanation);
-				res.send(JSON.parse(data));
+					res.send(JSON.parse(data));
+				}
+				else {
+					processErrorResponse(res, resp.statusCode, `Skillclusters remote server returned an error: ${resp.statusCode} ${resp.statusMessage}`);
+				}								
 			});
 		}
 		catch(err) {
 			var errMessage = `${err}`;
-			console.log(`err = ${err}`);
-			res.status(500).send({
-				error: {
-					status: 500,
-					message: errMessage
-				},
-			});
+			processErrorResponse(res, 500, errMessage);
 		}
 	});
 })
 
+function processErrorResponse(res, statusCode, message) {
+	console.log(`${statusCode} ${message}`);
+	res.status(statusCode).send({
+		error: {
+			status: statusCode,
+			message: message
+		},
+	});
+}
 
 // To run this server locally, uncomment the code block below. It is commented out to deploy this app on Vercel.
 
 app.listen(app.get('port'), function() {
   console.log('Express app zeit-buttons-serverless is running on port', app.get('port'));
 });
-
 
 module.exports = app
