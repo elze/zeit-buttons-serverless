@@ -3,7 +3,7 @@ const { v4 } = require('uuid')
 const bodyParser = require('body-parser')
 app.use(bodyParser.json());
 
-require('dotenv').config();
+//require('dotenv').config();
 
 const https = require('https');
 const http = require('http');
@@ -147,6 +147,7 @@ app.get('/api/jobsPerSkillPair_v0/:id', (req, res) => {
 	});
 })
 
+
 app.get('/api/jobsPerSkillPair/:id', (req, res) => {
 	const { id } = req.params
 
@@ -166,7 +167,7 @@ app.get('/api/jobsPerSkillPair/:id', (req, res) => {
 			  .query('SELECT * FROM "public"."sc5_job_postings_to_skill_pairs" WHERE skill_pair_id = $1', [id])
 			  .then(dbRes => {
 				client.release()
-				const fileNameToJobSnippets = dbRes.rows?.map(row => {
+				const fileNameToJobSnippets = dbRes.rows.map(row => {
 					const jfName = row.job_file_name;
 					return {"job_file_name": row.job_file_name, "job_ad_snippet": row.job_ad_snippet}
 				});
@@ -186,7 +187,6 @@ app.get('/api/jobsPerSkillPair/:id', (req, res) => {
 		processErrorResponse(res, 500, errMessage);
 	}		
 })
-
 
 function processErrorResponse(res, statusCode, message) {
 	console.log(`${statusCode} ${message}`);
